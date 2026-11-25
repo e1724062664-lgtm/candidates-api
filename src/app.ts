@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 
 import { InMemoryVacancyRepository } from './modules/vacancies/adapters/persistence/InMemoryVacancyRepository';
@@ -12,6 +13,10 @@ import { createPostgresPool } from './shared/database/postgresPool';
 import { errorHandler, notFoundHandler } from './shared/httpErrorHandlers';
 
 const app = express();
+
+// CORS: permite que el navegador deje al frontend (otro origen) llamar a esta API.
+// Solo se autoriza un origen concreto, nunca "*". Se registra antes de las rutas.
+app.use(cors({ origin: process.env.CORS_ORIGIN ?? 'http://localhost:5173' }));
 
 app.use(express.json());
 

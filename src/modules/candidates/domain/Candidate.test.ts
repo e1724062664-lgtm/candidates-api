@@ -1,7 +1,7 @@
 import { DomainError } from '../../../shared/DomainError';
 import { parseNewCandidate } from './Candidate';
 
-// Datos válidos de ejemplo (datos de prueba en español).
+// Datos válidos de ejemplo.
 const validInput = {
   name: 'María Fernández',
   email: 'maria@example.com',
