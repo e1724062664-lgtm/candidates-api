@@ -252,3 +252,33 @@ describe('DELETE /candidates/:id', () => {
     expect(response.status).toBe(404);
   });
 });
+
+
+// Origen del frontend en desarrollo (valor por defecto cuando no existe CORS_ORIGIN).
+const frontendOrigin = 'http://localhost:5173';
+
+describe('CORS', () => {
+  it('sends access-control-allow-origin with the frontend origin', async () => {
+    const response = await request(app).get('/candidates').set('Origin', frontendOrigin);
+
+    expect(response.status).toBe(200);
+    expect(response.headers['access-control-allow-origin']).toBe(frontendOrigin);
+  });
+
+  it('does not allow an origin that is not the frontend', async () => {
+    const response = await request(app).get('/candidates').set('Origin', 'http://otro-sitio.com');
+
+    expect(response.headers['access-control-allow-origin']).not.toBe('http://otro-sitio.com');
+    expect(response.headers['access-control-allow-origin']).not.toBe('*');
+  });
+
+  it('answers the preflight request with 204 and allows POST', async () => {
+    const response = await request(app)
+      .options('/candidates')
+      .set('Origin', frontendOrigin)
+      .set('Access-Control-Request-Method', 'POST');
+
+    expect(response.status).toBe(204);
+    expect(response.headers['access-control-allow-methods']).toContain('POST');
+  });
+});
